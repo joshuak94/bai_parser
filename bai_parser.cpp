@@ -4,29 +4,6 @@
 #include <fstream>
 #include <filesystem>
 
-// std::vector<std::byte> load_file(std::filesystem::path const& filepath)
-// {
-//     std::ifstream ifs(filepath.c_str(), std::ios::binary|std::ios::ate);
-//
-//     if(!ifs)
-//         throw std::runtime_error(filepath + ": " + std::strerror(errno));
-//
-//     auto end = ifs.tellg();
-//     ifs.seekg(0, std::ios::beg);
-//
-//     auto size = std::size_t(end - ifs.tellg());
-//
-//     if(size == 0) // avoid undefined behavior
-//         return {};
-//
-//     std::vector<std::byte> buffer(size);
-//
-//     if(!ifs.read((char*)buffer.data(), buffer.size()))
-//         throw std::runtime_error(filepath + ": " + std::strerror(errno));
-//
-//     return buffer;
-// }
-
 /* calculate bin given an alignment covering [beg,end) (zero-based, half-closed-half-open) */
 int reg2bin(int beg, int end)
 {
@@ -39,6 +16,9 @@ int reg2bin(int beg, int end)
     return 0;
 }
 
+/**
+ * Calculates a list of bins which overlap the given region.
+ */
 void baiReg2bins(std::vector<uint16_t> & list, uint32_t beg, uint32_t end)
 {
     unsigned k;
@@ -63,7 +43,6 @@ int main()
         throw std::runtime_error(std::strerror(errno));
     }
 
-    // int overlapping_bins = reg2bin(0, 10000000);
     std::vector<uint16_t> overlapping_bins{};
     baiReg2bins(overlapping_bins, 0, 500000);
     seqan3::debug_stream << overlapping_bins << std::endl;
@@ -71,7 +50,6 @@ int main()
     input.seekg(0, std::ios::beg);
 
     auto size = std::size_t(end - input.tellg());
-    // seqan3::debug_stream << "end is: " << end << " and size is: " << size << std::endl;
 
     if (size == 0)
     {
